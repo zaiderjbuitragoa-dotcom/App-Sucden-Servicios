@@ -840,10 +840,11 @@ textarea.form-control { resize: vertical; min-height: 80px; }
   justify-content: center;
   padding: var(--sp-4);
   opacity: 0;
+  pointer-events: none;
   transition: opacity var(--tr-base);
 }
 
-.modal-backdrop.open { opacity: 1; }
+.modal-backdrop.open { opacity: 1; pointer-events: auto; }
 
 .modal {
   background: var(--bg-card);
