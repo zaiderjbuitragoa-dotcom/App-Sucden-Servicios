@@ -4,7 +4,7 @@
 
 const API = (() => {
   function getBaseUrl() {
-    return (localStorage.getItem('sucden_api_url') || window.SUCDEN_API_URL || 'https://script.google.com/macros/s/1cfXcRoEhb1iJx8TOL3FjMsCjYZByzoDP4M3FJNfe7TjzJdBh913sm6jO/exec').trim();
+    return (localStorage.getItem('sucden_api_url') || window.SUCDEN_API_URL || 'https://script.google.com/macros/s/AKfycbyTyk2HfVx7_x30H_xiOkohevI15S-pdBa4cq6-Yig2t45m7Y91KBu3_-PJjGV5d5sC/exec').trim();
   }
 
   async function parseResponse(res) {
