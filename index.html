@@ -305,22 +305,6 @@
         </button>
       </form>
 
-      <!-- Configuración URL Backend -->
-      <div style="margin-top:1.5rem;text-align:center">
-        <button type="button" onclick="toggleConfig()" style="background:none;border:none;color:#64748B;font-size:0.75rem;cursor:pointer">
-          ⚙️ Configurar URL Backend Google Apps Script
-        </button>
-      </div>
-
-      <div id="config-box" style="display:none;margin-top:0.75rem;padding:0.75rem;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px">
-        <label style="font-size:0.75rem;color:#475569;display:block;margin-bottom:4px">URL de la WebApp:</label>
-        <input type="url" id="api-url-input" class="form-input" style="font-size:0.75rem;padding:6px 10px" placeholder="https://script.google.com/macros/s/.../exec">
-        <div style="display:flex;gap:6px;margin-top:6px">
-          <button type="button" onclick="saveApiUrl()" style="flex:1;padding:6px;font-size:0.75rem;background:#2563EB;color:#FFF;border:none;border-radius:6px;cursor:pointer">Guardar</button>
-          <button type="button" onclick="testApiUrl()" style="padding:6px 12px;font-size:0.75rem;background:#E2E8F0;color:#0F172A;border:none;border-radius:6px;cursor:pointer">Probar</button>
-        </div>
-      </div>
-
       <div style="margin-top:2rem;font-size:0.75rem;color:#94A3B8;text-align:center">
         © 2026 Sucden Colombia S.A.S. Todos los derechos reservados.
       </div>
@@ -335,41 +319,11 @@
       window.location.href = 'app.html';
     }
 
-    document.getElementById('api-url-input').value = API.BASE_URL;
-
     function switchTab(tab) {
       document.getElementById('tab-login').classList.toggle('active', tab === 'login');
       document.getElementById('tab-register').classList.toggle('active', tab === 'register');
       document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
       document.getElementById('form-register').style.display = tab === 'register' ? 'block' : 'none';
-    }
-
-    function toggleConfig() {
-      const box = document.getElementById('config-box');
-      box.style.display = box.style.display === 'none' ? 'block' : 'none';
-    }
-
-    function saveApiUrl() {
-      const url = document.getElementById('api-url-input').value.trim();
-      if (!url || !url.startsWith('https://script.google.com/')) {
-        return Toast.error('URL inválida', 'Debe comenzar por https://script.google.com/...');
-      }
-      localStorage.setItem('sucden_api_url', url);
-      Toast.success('URL Guardada', 'Reiniciando aplicación...');
-      setTimeout(() => window.location.reload(), 600);
-    }
-
-    async function testApiUrl() {
-      const url = document.getElementById('api-url-input').value.trim();
-      if (!url) return Toast.error('Requerido', 'Ingrese la URL');
-      try {
-        const res = await fetch(`${url}?action=health`);
-        const data = await res.json();
-        if (data.ok) Toast.success('Conexión Exitosa', 'El backend respondió OK.');
-        else Toast.error('Error', data.message || 'Respuesta inválida');
-      } catch (err) {
-        Toast.error('Conexión fallida', 'Verifique los permisos de su WebApp en Apps Script.');
-      }
     }
 
     async function handleLogin(e) {
