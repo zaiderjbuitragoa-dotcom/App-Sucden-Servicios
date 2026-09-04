@@ -61,3 +61,4 @@ const PageDocumentos = (() => {
 
   return { render, loadData, search };
 })();
+window.PageDocumentos = PageDocumentos;

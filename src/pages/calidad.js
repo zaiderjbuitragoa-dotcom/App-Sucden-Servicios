@@ -234,3 +234,4 @@ const PageCalidad = (() => {
 
   return { render, loadData, openForm, save, handleFiles, search, filterResultado };
 })();
+window.PageCalidad = PageCalidad;

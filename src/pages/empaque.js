@@ -209,3 +209,4 @@ const PageEmpaque = (() => {
 
   return { render, loadData, onPresentacionChange, calcPesoTotal, openForm, save, search };
 })();
+window.PageEmpaque = PageEmpaque;

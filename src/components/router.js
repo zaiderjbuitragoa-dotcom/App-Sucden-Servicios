@@ -104,15 +104,18 @@ const Router = (() => {
     currentRoute = route;
 
     // Llamar al módulo de página correspondiente
-    const mod = window[route.module];
+    let mod = window[route.module];
+    if (!mod) {
+      try { mod = window[route.module] || eval(route.module); } catch(e) {}
+    }
+
     if (mod && typeof mod.render === 'function') {
       setTimeout(() => {
         document.querySelector('.loading-overlay')?.remove();
         mod.render(content, params);
         currentPage = route.id;
-        // Hash URL
         history.replaceState({ page: pageId }, '', `#${pageId}`);
-      }, 150);
+      }, 100);
     } else {
       content.innerHTML = `<div class="empty-state"><span class="empty-icon">🚧</span><div class="empty-title">Módulo en construcción</div><div class="empty-msg">${route.label} estará disponible próximamente.</div></div>`;
     }

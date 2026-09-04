@@ -7,56 +7,51 @@
 
 /* ── Custom Properties ───────────────────────────────────── */
 :root {
-  /* Paleta corporativa café */
-  --coffee-950:  #1A0A05;
-  --coffee-900:  #2C1008;
-  --coffee-800:  #3D1A0E;
-  --coffee-700:  #5C2D15;
-  --coffee-600:  #7A3D1E;
-  --coffee-500:  #9B5028;
-  --coffee-400:  #C06C38;
-  --coffee-300:  #D4884E;
-  --coffee-200:  #E8B082;
-  --coffee-100:  #F3D5B5;
-  --coffee-50:   #FAF0E6;
+  /* Paleta corporativa Sucden Colombia (Blanco, Azul Marino y Gris Claro) */
+  --blue-950:  #070E1A;
+  --blue-900:  #0F1E36;
+  --blue-800:  #162A45;
+  --blue-700:  #1E3B62;
+  --blue-600:  #2B5487;
+  --blue-500:  #3A71B2;
+  --blue-400:  #5B8FD4;
+  --blue-100:  #EBF3FC;
+  --blue-50:   #F0F6FF;
 
-  --gold-500:    #C8832A;
-  --gold-400:    #DBA048;
-  --gold-300:    #ECC070;
-  --gold-100:    #FBF0D9;
+  --gold-500:  #D97706;
+  --gold-400:  #F59E0B;
+  --gold-100:  #FEF3C7;
 
-  --cream:       #F5E6D3;
-  --cream-dark:  #EDD5BB;
-
-  --olive-700:   #3D4A2D;
-  --olive-500:   #5C6E42;
-  --olive-300:   #8A9E67;
+  --green-700: #15803D;
+  --green-600: #16A34A;
+  --green-500: #22C55E;
+  --green-100: #DCFCE7;
 
   /* UI Colors */
-  --bg-base:     #0F0805;
-  --bg-surface:  #1C120D;
-  --bg-card:     #241710;
-  --bg-elevated: #2E1E14;
-  --bg-input:    #1A0F0A;
+  --bg-base:     #F8FAFC;
+  --bg-surface:  #FFFFFF;
+  --bg-card:     #FFFFFF;
+  --bg-elevated: #F1F5F9;
+  --bg-input:    #FFFFFF;
 
-  --border-subtle:  rgba(200, 131, 42, 0.15);
-  --border-default: rgba(200, 131, 42, 0.3);
-  --border-strong:  rgba(200, 131, 42, 0.5);
+  --border-subtle:  #E2E8F0;
+  --border-default: #CBD5E1;
+  --border-strong:  #94A3B8;
 
-  --text-primary:   #F5E6D3;
-  --text-secondary: #C4A882;
-  --text-muted:     #8A7060;
-  --text-inverse:   #1A0A05;
+  --text-primary:   #0F172A;
+  --text-secondary: #334155;
+  --text-muted:     #64748B;
+  --text-inverse:   #FFFFFF;
 
   /* Status */
-  --success:     #4CAF78;
-  --success-bg:  rgba(76, 175, 120, 0.12);
-  --warning:     #F5A623;
-  --warning-bg:  rgba(245, 166, 35, 0.12);
-  --danger:      #E05252;
-  --danger-bg:   rgba(224, 82, 82, 0.12);
-  --info:        #5BB8E8;
-  --info-bg:     rgba(91, 184, 232, 0.12);
+  --success:     #16A34A;
+  --success-bg:  #DCFCE7;
+  --warning:     #D97706;
+  --warning-bg:  #FEF3C7;
+  --danger:      #DC2626;
+  --danger-bg:   #FEE2E2;
+  --info:        #2563EB;
+  --info-bg:     #DBEAFE;
 
   /* Spacing */
   --sp-1: 4px;
@@ -78,10 +73,10 @@
   --r-full: 9999px;
 
   /* Shadows */
-  --shadow-sm:  0 1px 3px rgba(0,0,0,0.4);
-  --shadow-md:  0 4px 16px rgba(0,0,0,0.5);
-  --shadow-lg:  0 8px 32px rgba(0,0,0,0.6);
-  --shadow-glow:0 0 24px rgba(200, 131, 42, 0.2);
+  --shadow-sm:  0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md:  0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg:  0 10px 25px rgba(0,0,0,0.1);
+  --shadow-glow:0 0 20px rgba(37, 99, 235, 0.15);
 
   /* Sidebar */
   --sidebar-w:  260px;

@@ -79,3 +79,4 @@ const PageAdministracion = (() => {
 
   return { render, loadSection };
 })();
+window.PageAdministracion = PageAdministracion;

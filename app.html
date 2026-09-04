@@ -3,27 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sucden Colombia — Trazabilidad de Café</title>
+  <title>Sucden Colombia — Sistema de Trazabilidad de Café</title>
   <link rel="stylesheet" href="src/styles/main.css">
 </head>
 <body>
 
   <div class="app-shell">
-    <!-- Sidebar Left -->
+    <!-- Sidebar Left (Dark Corporate Navy) -->
     <aside class="sidebar" id="sidebar">
-      <div class="sidebar-brand">
-        <div class="brand-logo">☕</div>
+      <div class="sidebar-brand" style="display:flex;align-items:center;gap:12px;padding:20px 16px;border-bottom:1px solid rgba(255,255,255,0.08)">
+        <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="46" fill="#0F1E36" stroke="#D97706" stroke-width="4"/>
+          <path d="M50 20C35 30 30 50 45 75C60 50 65 30 50 20Z" fill="#D97706"/>
+          <path d="M50 20C65 30 70 50 55 75C40 50 35 30 50 20Z" fill="#22C55E" opacity="0.85"/>
+          <path d="M48 25L52 70" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+        </svg>
         <div class="brand-text">
-          <div class="brand-name">Sucden</div>
-          <div class="brand-sub">Colombia S.A.S.</div>
+          <div class="brand-name" style="font-weight:800;font-size:16px;color:#FFFFFF;letter-spacing:-0.3px">SUCDEN</div>
+          <div class="brand-sub" style="font-size:10px;color:#94A3B8;letter-spacing:1.5px;font-weight:600">COLOMBIA S.A.S.</div>
         </div>
       </div>
 
       <nav class="sidebar-nav" id="sidebar-nav"></nav>
 
-      <div class="sidebar-footer">
+      <div class="sidebar-footer" style="padding:16px;border-top:1px solid rgba(255,255,255,0.08)">
         <div id="sidebar-user"></div>
-        <button class="btn btn-outline btn-sm mt-2" style="width:100%;justify-content:center;margin-top:8px" onclick="Auth.logout()">
+        <button class="btn btn-outline btn-sm mt-2" style="width:100%;justify-content:center;margin-top:10px;color:#E2E8F0;border-color:rgba(255,255,255,0.2)" onclick="Auth.logout()">
           🚪 Cerrar Sesión
         </button>
       </div>
@@ -31,28 +36,30 @@
 
     <!-- Main Wrapper -->
     <div class="main-wrapper" id="main-wrapper">
-      <!-- Topbar Header -->
-      <header class="topbar">
-        <button class="topbar-toggle" id="sidebar-toggle" title="Contraer menú">☰</button>
-
-        <div class="page-breadcrumb">
-          <span>Sucden Colombia</span>
-          <span>/</span>
-          <span class="breadcrumb-current" id="breadcrumb-current">Dashboard</span>
+      <!-- Topbar Header (Clean White) -->
+      <header class="topbar" style="background:#FFFFFF;border-bottom:1px solid #E2E8F0;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:64px">
+        <div style="display:flex;align-items:center;gap:16px">
+          <button class="topbar-toggle" id="sidebar-toggle" title="Contraer menú" style="background:none;border:none;font-size:20px;color:#334155;cursor:pointer">☰</button>
+          
+          <div class="page-breadcrumb" style="font-size:14px;color:#64748B;display:flex;align-items:center;gap:8px">
+            <span style="font-weight:600;color:#0F172A">Sucden Colombia</span>
+            <span>/</span>
+            <span class="breadcrumb-current" id="breadcrumb-current" style="color:#2563EB;font-weight:600">Dashboard</span>
+          </div>
         </div>
 
-        <div class="topbar-actions">
-          <button class="icon-btn" onclick="Router.navigate('novedades')" title="Novedades">
-            ⚠️
+        <div class="topbar-actions" style="display:flex;align-items:center;gap:12px">
+          <button class="icon-btn" onclick="Router.navigate('novedades')" title="Novedades" style="background:#F1F5F9;border:1px solid #E2E8F0;border-radius:8px;padding:8px 12px;cursor:pointer">
+            ⚠️ Novedades
           </button>
-          <button class="icon-btn" onclick="Modal.open('modal-config-api')" title="Configurar API WebApp">
-            ⚙️
+          <button class="icon-btn" onclick="Modal.open('modal-config-api')" title="Configurar API WebApp" style="background:#F1F5F9;border:1px solid #E2E8F0;border-radius:8px;padding:8px 12px;cursor:pointer">
+            ⚙️ API Config
           </button>
         </div>
       </header>
 
       <!-- Page Content Viewport -->
-      <main class="page-content" id="page-content">
+      <main class="page-content" id="page-content" style="background:#F8FAFC;padding:24px">
         <div class="loading-overlay">
           <div class="spinner" style="width:36px;height:36px"></div>
         </div>
@@ -68,7 +75,7 @@
         <button class="modal-close" onclick="Modal.close('modal-config-api')">✕</button>
       </div>
       <div class="modal-body">
-        <p class="fs-xs text-muted mb-4">Ingrese la URL obtenida al desplegar el Web App en Apps Script (Publicar → Implementación web).</p>
+        <p class="fs-xs text-muted mb-4">Ingrese la URL obtenida al desplegar el Web App en Apps Script.</p>
         <div class="form-group">
           <label class="form-label" for="api-url-input">URL del WebApp</label>
           <input type="url" id="api-url-input" class="form-control" placeholder="https://script.google.com/macros/s/.../exec">
@@ -103,7 +110,6 @@
   <script src="src/pages/administracion.js"></script>
 
   <script>
-    // Inicialización del SPA
     document.addEventListener('DOMContentLoaded', () => {
       if (!Auth.requireAuth()) return;
 
@@ -111,7 +117,6 @@
       initSidebarToggle();
       Router.init();
 
-      // Cargar URL API actual
       const input = document.getElementById('api-url-input');
       if (input) input.value = API.BASE_URL;
     });

@@ -273,3 +273,4 @@ const PageDashboard = (() => {
 
   return { render, refresh };
 })();
+window.PageDashboard = PageDashboard;

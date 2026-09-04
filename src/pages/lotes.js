@@ -229,3 +229,4 @@ const PageLotes = (() => {
 
   return { render, loadData, openDetalle, search, filterEstado };
 })();
+window.PageLotes = PageLotes;

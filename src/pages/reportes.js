@@ -112,3 +112,4 @@ const PageReportes = (() => {
 
   return { render, genReport, exportCSV };
 })();
+window.PageReportes = PageReportes;

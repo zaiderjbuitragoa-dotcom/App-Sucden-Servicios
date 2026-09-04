@@ -137,3 +137,4 @@ const PageNovedades = (() => {
 
   return { render, loadData, openForm, save, search };
 })();
+window.PageNovedades = PageNovedades;

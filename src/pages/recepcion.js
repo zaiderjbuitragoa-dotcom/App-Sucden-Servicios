@@ -363,3 +363,4 @@ const PageRecepcion = (() => {
 
   return { render, loadData, search, filterEstado, openForm, save, calcPesoNeto, onProveedorChange, onProductorChange, handleFiles };
 })();
+window.PageRecepcion = PageRecepcion;

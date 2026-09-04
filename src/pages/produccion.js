@@ -359,3 +359,4 @@ const PageProduccion = (() => {
 
   return { render, loadData, openStartForm, addLoteToOrder, removeLoteFromOrder, saveStart, openFinishForm, calcFinishMetrics, saveFinish, search, filterEstado };
 })();
+window.PageProduccion = PageProduccion;

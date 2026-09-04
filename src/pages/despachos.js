@@ -279,3 +279,4 @@ const PageDespachos = (() => {
 
   return { render, loadData, openForm, addLoteToDespacho, removeLoteFromDespacho, save, confirmDespacho, search, filterEstado };
 })();
+window.PageDespachos = PageDespachos;

@@ -193,3 +193,4 @@ const PageInventario = (() => {
 
   return { render, switchTab, loadStock, loadMovs, openAjusteForm, saveAjuste, searchStock, searchMovs, filterTipoMov };
 })();
+window.PageInventario = PageInventario;
