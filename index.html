@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sucden Colombia — Acceso al Sistema de Trazabilidad</title>
+  <link rel="stylesheet" href="src/styles/main.css">
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: radial-gradient(circle at center, var(--coffee-900) 0%, var(--bg-base) 100%);
+      padding: var(--sp-4);
+    }
+    .login-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-default);
+      border-radius: var(--r-xl);
+      padding: var(--sp-8);
+      width: 100%;
+      max-width: 420px;
+      box-shadow: var(--shadow-lg), var(--shadow-glow);
+    }
+    .login-brand {
+      text-align: center;
+      margin-bottom: var(--sp-6);
+    }
+    .login-logo {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--r-lg);
+      background: linear-gradient(135deg, var(--coffee-700), var(--gold-500));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto var(--sp-3);
+      box-shadow: var(--shadow-glow);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-logo">☕</div>
+      <h1 class="page-title" style="font-size:var(--text-xl)">Sucden Colombia</h1>
+      <p class="page-subtitle" style="margin-top:4px">Sistema de Gestión & Trazabilidad de Café</p>
+    </div>
+
+    <form id="form-login" onsubmit="handleLogin(event)" novalidate>
+      <div class="form-group mb-4">
+        <label class="form-label" for="login-email">Correo Electrónico</label>
+        <input type="email" id="login-email" class="form-control" placeholder="usuario@sucden.com.co" required autofocus>
+      </div>
+
+      <div class="form-group mb-6">
+        <label class="form-label" for="login-password">Contraseña</label>
+        <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+      </div>
+
+      <button type="submit" id="btn-login" class="btn btn-gold btn-lg" style="width:100%;justify-content:center">
+        🔒 Iniciar Sesión
+      </button>
+    </form>
+
+    <div style="margin-top:var(--sp-6);padding-top:var(--sp-4);border-top:1px solid var(--border-subtle);font-size:var(--text-xs);color:var(--text-muted);text-align:center">
+      Sucden Colombia S.A.S. — Trazabilidad Agroindustrial
+    </div>
+  </div>
+
+  <script src="src/services/api.js"></script>
+  <script src="src/services/auth.js"></script>
+  <script src="src/components/ui.js"></script>
+  <script>
+    // Redirigir si ya está autenticado
+    if (Auth.isLoggedIn()) {
+      window.location.href = 'app.html';
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const pass  = document.getElementById('login-password').value;
+      const btn   = document.getElementById('btn-login');
+
+      if (!email || !pass) {
+        return Toast.error('Error', 'Ingrese su correo y contraseña');
+      }
+
+      btn.disabled = true;
+      btn.textContent = '⏳ Autenticando...';
+
+      try {
+        await Auth.login(email, pass);
+        Toast.success('Acceso correcto', 'Redirigiendo...');
+        setTimeout(() => window.location.href = 'app.html', 500);
+      } catch(err) {
+        Toast.error('Acceso denegado', err.message);
+        btn.disabled = false;
+        btn.textContent = '🔒 Iniciar Sesión';
+      }
+    }
+  </script>
+</body>
+</html>

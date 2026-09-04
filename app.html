@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sucden Colombia — Trazabilidad de Café</title>
+  <link rel="stylesheet" href="src/styles/main.css">
+</head>
+<body>
+
+  <div class="app-shell">
+    <!-- Sidebar Left -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo">☕</div>
+        <div class="brand-text">
+          <div class="brand-name">Sucden</div>
+          <div class="brand-sub">Colombia S.A.S.</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav" id="sidebar-nav"></nav>
+
+      <div class="sidebar-footer">
+        <div id="sidebar-user"></div>
+        <button class="btn btn-outline btn-sm mt-2" style="width:100%;justify-content:center;margin-top:8px" onclick="Auth.logout()">
+          🚪 Cerrar Sesión
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper" id="main-wrapper">
+      <!-- Topbar Header -->
+      <header class="topbar">
+        <button class="topbar-toggle" id="sidebar-toggle" title="Contraer menú">☰</button>
+
+        <div class="page-breadcrumb">
+          <span>Sucden Colombia</span>
+          <span>/</span>
+          <span class="breadcrumb-current" id="breadcrumb-current">Dashboard</span>
+        </div>
+
+        <div class="topbar-actions">
+          <button class="icon-btn" onclick="Router.navigate('novedades')" title="Novedades">
+            ⚠️
+          </button>
+          <button class="icon-btn" onclick="Modal.open('modal-config-api')" title="Configurar API WebApp">
+            ⚙️
+          </button>
+        </div>
+      </header>
+
+      <!-- Page Content Viewport -->
+      <main class="page-content" id="page-content">
+        <div class="loading-overlay">
+          <div class="spinner" style="width:36px;height:36px"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal Configuración API Backend -->
+  <div class="modal-backdrop modal-sm" id="modal-config-api">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">⚙️ URL Backend Google Apps Script</h3>
+        <button class="modal-close" onclick="Modal.close('modal-config-api')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="fs-xs text-muted mb-4">Ingrese la URL obtenida al desplegar el Web App en Apps Script (Publicar → Implementación web).</p>
+        <div class="form-group">
+          <label class="form-label" for="api-url-input">URL del WebApp</label>
+          <input type="url" id="api-url-input" class="form-control" placeholder="https://script.google.com/macros/s/.../exec">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="Modal.close('modal-config-api')">Cancelar</button>
+        <button class="btn btn-gold" onclick="saveApiUrl()">Guardar URL</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Core Scripts -->
+  <script src="src/services/api.js"></script>
+  <script src="src/services/auth.js"></script>
+  <script src="src/utils/formatters.js"></script>
+  <script src="src/components/ui.js"></script>
+  <script src="src/components/router.js"></script>
+
+  <!-- Page Modules -->
+  <script src="src/pages/dashboard.js"></script>
+  <script src="src/pages/recepcion.js"></script>
+  <script src="src/pages/lotes.js"></script>
+  <script src="src/pages/calidad.js"></script>
+  <script src="src/pages/produccion.js"></script>
+  <script src="src/pages/inventario.js"></script>
+  <script src="src/pages/empaque.js"></script>
+  <script src="src/pages/despachos.js"></script>
+  <script src="src/pages/documentos.js"></script>
+  <script src="src/pages/novedades.js"></script>
+  <script src="src/pages/reportes.js"></script>
+  <script src="src/pages/administracion.js"></script>
+
+  <script>
+    // Inicialización del SPA
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!Auth.requireAuth()) return;
+
+      buildSidebar();
+      initSidebarToggle();
+      Router.init();
+
+      // Cargar URL API actual
+      const input = document.getElementById('api-url-input');
+      if (input) input.value = API.BASE_URL;
+    });
+
+    function saveApiUrl() {
+      const val = document.getElementById('api-url-input').value.trim();
+      if (val) {
+        API.setBaseUrl(val);
+      }
+    }
+  </script>
+</body>
+</html>
