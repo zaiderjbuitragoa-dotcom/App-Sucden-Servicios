@@ -8,6 +8,7 @@ const ROUTES = [
     id: 'dashboard', label: 'Dashboard', icon: '📊',
     group: 'Principal', module: 'PageDashboard',
     breadcrumb: 'Dashboard',
+    permission: 'dashboard',
   },
   {
     id: 'recepcion', label: 'Recepción', icon: '📥',
@@ -87,6 +88,19 @@ const Router = (() => {
     const route = ROUTES.find(r => r.id === pageId);
     if (!route) return;
 
+    // Bloquea el acceso directo (por URL/hash) a módulos sin permiso
+    if (route.permission && !Auth.hasPermission(route.permission)) {
+      const content = document.getElementById('page-content');
+      if (content) {
+        content.innerHTML = `<div class="empty-state"><span class="empty-icon">🔒</span><div class="empty-title">Acceso no autorizado</div><div class="empty-msg">Tu rol (${Auth.getUser()?.rol || ''}) no tiene permiso para ver "${route.label}".</div></div>`;
+      }
+      const bc = document.getElementById('breadcrumb-current');
+      if (bc) bc.textContent = route.breadcrumb;
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      history.replaceState({ page: pageId }, '', `#${pageId}`);
+      return;
+    }
+
     // Actualizar sidebar activo
     document.querySelectorAll('.nav-item').forEach(el => {
       el.classList.toggle('active', el.dataset.page === pageId);
@@ -122,7 +136,11 @@ const Router = (() => {
   }
 
   function init() {
-    const hash = window.location.hash.replace('#', '') || 'dashboard';
+    let hash = window.location.hash.replace('#', '');
+    if (!hash || (ROUTES.find(r => r.id === hash)?.permission && !Auth.hasPermission(ROUTES.find(r => r.id === hash).permission))) {
+      const first = ROUTES.find(r => !r.permission || Auth.hasPermission(r.permission));
+      hash = first ? first.id : 'dashboard';
+    }
     navigate(hash);
   }
 
@@ -142,8 +160,9 @@ function buildSidebar() {
   let lastGroup = null;
 
   ROUTES.forEach(route => {
-    // Filtrar por permisos
+    // Filtrar por permisos reales del rol (no solo adminOnly)
     if (route.adminOnly && user?.rol !== 'ADMINISTRADOR') return;
+    if (route.permission && !Auth.hasPermission(route.permission)) return;
 
     if (route.group !== lastGroup) {
       html += `<div class="nav-group-label">${route.group}</div>`;
