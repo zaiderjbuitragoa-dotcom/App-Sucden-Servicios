@@ -39,22 +39,24 @@ const Auth = (() => {
     return true;
   }
 
+  const ROLES_PERMISOS = {
+    ADMINISTRADOR: ['*'],
+    GERENCIA:   ['dashboard','recepcion','lotes','calidad','produccion','inventario','empaque','despachos','documentos','reportes','novedades'],
+    RECEPCION:  ['recepcion','lotes','documentos','novedades'],
+    PRODUCCION: ['produccion','inventario','lotes','documentos','novedades'],
+    CALIDAD:    ['calidad','lotes','documentos','novedades'],
+    BODEGA:     ['inventario','empaque','lotes','documentos'],
+    DESPACHOS:  ['despachos','inventario','lotes','documentos','novedades'],
+    CONSULTA:   ['dashboard','lotes','calidad','produccion','inventario','despachos','reportes'],
+  };
+
   function hasPermission(perm) {
     const user = getUser();
     if (!user) return false;
-    // El administrador siempre tiene acceso
-    if (user.rol === 'ADMINISTRADOR') return true;
-    const perms = {
-      GERENCIA:   ['dashboard','lotes','recepciones','calidad','produccion','inventario','empaque','despachos','documentos','reportes','novedades'],
-      RECEPCION:  ['recepcion','lotes','documentos','novedades'],
-      PRODUCCION: ['produccion','inventario','lotes','documentos','novedades'],
-      CALIDAD:    ['calidad','lotes','documentos','novedades'],
-      BODEGA:     ['inventario','empaque','lotes','documentos'],
-      DESPACHOS:  ['despachos','inventario','lotes','documentos','novedades'],
-      CONSULTA:   ['dashboard','lotes','calidad','produccion','inventario','despachos','reportes'],
-    };
-    return (perms[user.rol] || []).includes(perm);
+    const perms = ROLES_PERMISOS[user.rol] || [];
+    if (perms.indexOf('*') !== -1) return true;
+    return perms.indexOf(perm) !== -1;
   }
 
-  return { getToken, getUser, isLoggedIn, login, logout, requireAuth, hasPermission, saveSession };
+  return { getToken, getUser, isLoggedIn, login, logout, requireAuth, hasPermission, saveSession, ROLES_PERMISOS };
 })();
