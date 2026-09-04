@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sucden Colombia — Acceso al Sistema de Trazabilidad</title>
+  <title>Sucden Colombia — Acceso & Registro</title>
   <link rel="stylesheet" href="src/styles/main.css">
   <style>
     body {
@@ -20,12 +20,12 @@
       border-radius: var(--r-xl);
       padding: var(--sp-8);
       width: 100%;
-      max-width: 420px;
+      max-width: 440px;
       box-shadow: var(--shadow-lg), var(--shadow-glow);
     }
     .login-brand {
       text-align: center;
-      margin-bottom: var(--sp-6);
+      margin-bottom: var(--sp-4);
     }
     .login-logo {
       width: 56px;
@@ -39,6 +39,36 @@
       margin: 0 auto var(--sp-3);
       box-shadow: var(--shadow-glow);
     }
+    .auth-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: var(--sp-6);
+    }
+    .auth-tab {
+      flex: 1;
+      padding: var(--sp-3) 0;
+      text-align: center;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      font-weight: var(--fw-semibold);
+      font-size: var(--text-sm);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .auth-tab.active {
+      color: var(--gold-400);
+      border-bottom-color: var(--gold-400);
+    }
+    .config-box {
+      margin-top: var(--sp-4);
+      padding: var(--sp-3);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--r-md);
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -50,6 +80,13 @@
       <p class="page-subtitle" style="margin-top:4px">Sistema de Gestión & Trazabilidad de Café</p>
     </div>
 
+    <!-- Pestañas Acceso / Registro -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">🔒 Iniciar Sesión</button>
+      <button class="auth-tab" id="tab-register" onclick="switchTab('register')">📝 Crear Cuenta</button>
+    </div>
+
+    <!-- Formulario Iniciar Sesión -->
     <form id="form-login" onsubmit="handleLogin(event)" novalidate>
       <div class="form-group mb-4">
         <label class="form-label" for="login-email">Correo Electrónico</label>
@@ -66,7 +103,58 @@
       </button>
     </form>
 
-    <div style="margin-top:var(--sp-6);padding-top:var(--sp-4);border-top:1px solid var(--border-subtle);font-size:var(--text-xs);color:var(--text-muted);text-align:center">
+    <!-- Formulario Crear Cuenta -->
+    <form id="form-register" onsubmit="handleRegister(event)" style="display:none" novalidate>
+      <div class="form-group mb-3">
+        <label class="form-label" for="reg-nombre">Nombre Completo</label>
+        <input type="text" id="reg-nombre" class="form-control" placeholder="Ej. Carlos Mendoza" required>
+      </div>
+
+      <div class="form-group mb-3">
+        <label class="form-label" for="reg-email">Correo Electrónico</label>
+        <input type="email" id="reg-email" class="form-control" placeholder="usuario@sucden.com.co" required>
+      </div>
+
+      <div class="form-group mb-3">
+        <label class="form-label" for="reg-password">Contraseña</label>
+        <input type="password" id="reg-password" class="form-control" placeholder="Mínimo 6 caracteres" required>
+      </div>
+
+      <div class="form-group mb-5">
+        <label class="form-label" for="reg-rol">Rol Solicitado</label>
+        <select id="reg-rol" class="form-control" required>
+          <option value="RECEPCION">Recepción de Café</option>
+          <option value="CALIDAD">Control de Calidad</option>
+          <option value="PRODUCCION">Trilla & Producción</option>
+          <option value="BODEGA">Bodega e Inventarios</option>
+          <option value="DESPACHOS">Despachos & Exportación</option>
+          <option value="GERENCIA">Gerencia / Reportes</option>
+          <option value="CONSULTA" selected>Consulta General</option>
+        </select>
+      </div>
+
+      <button type="submit" id="btn-register" class="btn btn-gold btn-lg" style="width:100%;justify-content:center">
+        ✨ Registrar mi Usuario
+      </button>
+    </form>
+
+    <!-- Configuración de URL de Backend -->
+    <div style="text-align:center;margin-top:var(--sp-4)">
+      <button type="button" class="btn btn-ghost btn-sm" onclick="toggleConfig()" style="font-size:var(--text-xs);color:var(--text-muted)">
+        ⚙️ Configurar URL Backend API
+      </button>
+    </div>
+
+    <div id="config-box" class="config-box mb-4">
+      <label class="form-label" style="font-size:var(--text-xs)" for="api-url-input">URL del Web App de Google Apps Script:</label>
+      <input type="url" id="api-url-input" class="form-control" style="font-size:var(--text-xs)" placeholder="https://script.google.com/macros/s/AKfycb.../exec">
+      <div style="display:flex;gap:var(--sp-2);margin-top:var(--sp-2)">
+        <button type="button" onclick="saveApiUrl()" class="btn btn-primary btn-sm" style="flex:1">💾 Guardar URL</button>
+        <button type="button" onclick="testApiUrl()" class="btn btn-secondary btn-sm">⚡ Probar</button>
+      </div>
+    </div>
+
+    <div style="margin-top:var(--sp-4);padding-top:var(--sp-4);border-top:1px solid var(--border-subtle);font-size:var(--text-xs);color:var(--text-muted);text-align:center">
       Sucden Colombia S.A.S. — Trazabilidad Agroindustrial
     </div>
   </div>
@@ -78,6 +166,47 @@
     // Redirigir si ya está autenticado
     if (Auth.isLoggedIn()) {
       window.location.href = 'app.html';
+    }
+
+    // Inicializar campo URL
+    document.getElementById('api-url-input').value = API.BASE_URL;
+
+    function switchTab(tab) {
+      document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+      document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+      document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
+      document.getElementById('form-register').style.display = tab === 'register' ? 'block' : 'none';
+    }
+
+    function toggleConfig() {
+      const box = document.getElementById('config-box');
+      box.style.display = box.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function saveApiUrl() {
+      const url = document.getElementById('api-url-input').value.trim();
+      if (!url || !url.startsWith('https://script.google.com/')) {
+        return Toast.error('URL no válida', 'Ingrese una URL que comience por https://script.google.com/...');
+      }
+      localStorage.setItem('sucden_api_url', url);
+      Toast.success('URL Guardada', 'Se ha guardado la nueva URL de la API');
+      setTimeout(() => window.location.reload(), 800);
+    }
+
+    async function testApiUrl() {
+      const url = document.getElementById('api-url-input').value.trim();
+      if (!url) return Toast.error('URL requerida', 'Ingrese la URL a probar');
+      try {
+        const res = await fetch(`${url}?action=health`);
+        const data = await res.json();
+        if (data.ok) {
+          Toast.success('Conexión Exitosa', 'El backend respondió correctamente.');
+        } else {
+          Toast.error('Respuesta inesperada', data.message || 'Error en backend');
+        }
+      } catch (err) {
+        Toast.error('Error de Conexión', 'No se pudo conectar a la URL. Verifique que la publicación esté en "Cualquier persona".');
+      }
     }
 
     async function handleLogin(e) {
@@ -101,6 +230,33 @@
         Toast.error('Acceso denegado', err.message);
         btn.disabled = false;
         btn.textContent = '🔒 Iniciar Sesión';
+      }
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      const nombre   = document.getElementById('reg-nombre').value.trim();
+      const email    = document.getElementById('reg-email').value.trim();
+      const password = document.getElementById('reg-password').value;
+      const rol      = document.getElementById('reg-rol').value;
+      const btn      = document.getElementById('btn-register');
+
+      if (!nombre || !email || !password) {
+        return Toast.error('Datos incompletos', 'Diligencie todos los campos requeridos.');
+      }
+
+      btn.disabled = true;
+      btn.textContent = '⏳ Registrando...';
+
+      try {
+        await API.post('register', { nombre, email, password, rol });
+        Toast.success('Registro Exitoso', 'Tu usuario ha sido creado. Iniciando sesión...');
+        await Auth.login(email, password);
+        setTimeout(() => window.location.href = 'app.html', 600);
+      } catch (err) {
+        Toast.error('Error en registro', err.message);
+        btn.disabled = false;
+        btn.textContent = '✨ Registrar mi Usuario';
       }
     }
   </script>
