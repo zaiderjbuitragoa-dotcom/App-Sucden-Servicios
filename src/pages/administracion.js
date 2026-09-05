@@ -84,34 +84,41 @@ const PageAdministracion = (() => {
     }
   }
 
-  function showPermisos() {
+  async function showPermisos() {
     const tEl = document.getElementById('admin-sec-title');
     const cEl = document.getElementById('admin-sec-content');
     if (tEl) tEl.textContent = 'Matriz de Roles & Permisos';
     if (!cEl) return;
+    cEl.innerHTML = '<div class="empty-state"><div class="spinner"></div></div>';
 
-    const roles = Object.keys(Auth.ROLES_PERMISOS);
-    const modulos = ROUTES.filter(r => r.id !== 'administracion');
+    let matriz;
+    try {
+      matriz = await API.get('permisosMatriz');
+    } catch (err) {
+      cEl.innerHTML = `<div class="alert alert-danger">❌ No se pudo cargar la matriz de permisos: ${err.message}</div>`;
+      return;
+    }
 
-    const check = (rol, permiso) => {
-      const perms = Auth.ROLES_PERMISOS[rol] || [];
-      const tiene = perms.includes('*') || perms.includes(permiso);
-      return tiene
-        ? '<span style="color:#16A34A;font-weight:700">✅</span>'
-        : '<span style="color:#CBD5E1">—</span>';
+    const roles = Object.keys(matriz).filter(r => r !== 'ADMINISTRADOR');
+    const modulos = ROUTES.filter(r => r.id !== 'administracion' && r.permission);
+
+    const estaMarcado = (rol, permiso) => {
+      const perms = matriz[rol] || [];
+      return perms.includes('*') || perms.includes(permiso);
     };
 
     cEl.innerHTML = `
       <p class="fs-xs text-muted mb-4">
-        Esta matriz refleja los permisos que ya trae configurados el sistema por rol
-        (definidos en <code>src/services/auth.js</code> y validados también en el backend, <code>Config.gs</code>).
-        Administración y Auditoría son exclusivos de ADMINISTRADOR.
+        Marca o desmarca qué módulos puede ver cada rol y presiona "Guardar Cambios".
+        ADMINISTRADOR siempre tiene acceso total y no se puede restringir.
+        Los cambios se validan también en el backend, así que no se pueden saltar entrando por URL directa.
       </p>
       <div class="table-container">
-        <table class="table">
+        <table class="table" id="permisos-table">
           <thead>
             <tr>
               <th>Módulo</th>
+              <th style="text-align:center">ADMINISTRADOR</th>
               ${roles.map(r => `<th style="text-align:center">${r}</th>`).join('')}
             </tr>
           </thead>
@@ -119,18 +126,48 @@ const PageAdministracion = (() => {
             ${modulos.map(m => `
               <tr>
                 <td>${m.icon} ${m.label}</td>
-                ${roles.map(r => `<td style="text-align:center">${r === 'ADMINISTRADOR' ? '✅' : check(r, m.permission)}</td>`).join('')}
+                <td style="text-align:center" title="El administrador siempre tiene acceso">✅</td>
+                ${roles.map(r => `
+                  <td style="text-align:center">
+                    <input type="checkbox" data-rol="${r}" data-modulo="${m.permission}"
+                      ${estaMarcado(r, m.permission) ? 'checked' : ''}
+                      style="width:18px;height:18px;cursor:pointer">
+                  </td>`).join('')}
               </tr>`).join('')}
           </tbody>
         </table>
       </div>
-      <p class="fs-xs text-muted mt-4">
-        ¿Necesitas cambiar qué ve un rol? Por ahora se ajusta editando esa lista de permisos en el código
-        (frontend y backend) y volviendo a publicar. Si quieres, puedo dejarlo editable desde aquí mismo
-        en una próxima mejora.
-      </p>`;
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button class="btn btn-primary btn-sm" id="btn-guardar-permisos" onclick="PageAdministracion.guardarPermisos()">💾 Guardar Cambios</button>
+        <button class="btn btn-outline btn-sm" onclick="PageAdministracion.showPermisos()">↺ Descartar</button>
+      </div>`;
   }
 
-  return { render, loadSection, showPermisos };
+  async function guardarPermisos() {
+    const btn = document.getElementById('btn-guardar-permisos');
+    const table = document.getElementById('permisos-table');
+    if (!table) return;
+
+    // Reconstruir la matriz a partir de las casillas marcadas
+    const matriz = { ADMINISTRADOR: ['*'] };
+    table.querySelectorAll('input[type="checkbox"]').forEach(chk => {
+      const rol = chk.dataset.rol;
+      const modulo = chk.dataset.modulo;
+      if (!matriz[rol]) matriz[rol] = [];
+      if (chk.checked) matriz[rol].push(modulo);
+    });
+
+    if (btn) { btn.disabled = true; btn.innerHTML = '⏳ Guardando...'; }
+    try {
+      await API.post('updatePermisos', { matriz });
+      Toast.success('Permisos actualizados', 'Los cambios ya están activos. Cada usuario los verá al recargar o volver a iniciar sesión.');
+    } catch (err) {
+      Toast.error('Error al guardar', err.message);
+    } finally {
+      if (btn) { btn.disabled = false; btn.innerHTML = '💾 Guardar Cambios'; }
+    }
+  }
+
+  return { render, loadSection, showPermisos, guardarPermisos };
 })();
 window.PageAdministracion = PageAdministracion;
