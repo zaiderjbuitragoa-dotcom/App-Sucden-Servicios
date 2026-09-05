@@ -153,8 +153,10 @@
       `;
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       if (!Auth.requireAuth()) return;
+
+      await Auth.refreshPermisos(); // trae los permisos vigentes (por si el admin los cambió)
 
       buildSidebar();
       initSidebarToggle();
